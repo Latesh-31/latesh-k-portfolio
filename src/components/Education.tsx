@@ -1,9 +1,49 @@
 import { Card } from "@/components/ui/card";
 import { GraduationCap, Award } from "lucide-react";
+import { motion } from "framer-motion";
+
+const sectionVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: "easeOut",
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring",
+      stiffness: 300,
+      damping: 24,
+      duration: 0.6,
+    },
+  },
+};
+
+const hoverSpring = {
+  type: "spring",
+  stiffness: 300,
+  damping: 10,
+};
 
 const Education = () => {
   return (
-    <section className="py-20 px-4 bg-muted/30" id="education">
+    <motion.section
+      className="py-20 px-4 bg-muted/30"
+      id="education"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.3 }}
+      variants={sectionVariants}
+    >
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold mb-4">Education & Certifications</h2>
@@ -12,8 +52,25 @@ const Education = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card className="p-6 hover:shadow-lg transition-all duration-300">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          variants={{
+            hidden: {},
+            visible: {
+              transition: { staggerChildren: 0.1 },
+            },
+          }}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+        >
+          <motion.div
+            as={Card} // Use as prop to render Card with motion
+            className="p-6" // Removed existing hover classes
+            variants={itemVariants}
+            whileHover={{ scale: 1.03 }} // Card specific hover scale
+            transition={hoverSpring}
+          >
             <div className="flex gap-4">
               <div className="p-3 bg-gradient-to-br from-primary to-secondary rounded-lg h-fit">
                 <GraduationCap className="w-6 h-6 text-primary-foreground" />
@@ -33,9 +90,15 @@ const Education = () => {
                 </div>
               </div>
             </div>
-          </Card>
+          </motion.div>
 
-          <Card className="p-6 hover:shadow-lg transition-all duration-300">
+          <motion.div
+            as={Card} // Use as prop to render Card with motion
+            className="p-6" // Removed existing hover classes
+            variants={itemVariants}
+            whileHover={{ scale: 1.03 }} // Card specific hover scale
+            transition={hoverSpring}
+          >
             <div className="flex gap-4">
               <div className="p-3 bg-gradient-to-br from-primary to-secondary rounded-lg h-fit">
                 <Award className="w-6 h-6 text-primary-foreground" />
@@ -58,10 +121,10 @@ const Education = () => {
                 </div>
               </div>
             </div>
-          </Card>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Code2, Database, Brain, Wrench } from "lucide-react";
+import { motion } from "framer-motion";
 
 const skillCategories = [
   {
@@ -24,9 +25,48 @@ const skillCategories = [
   },
 ];
 
+const sectionVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: "easeOut",
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring",
+      stiffness: 300,
+      damping: 24,
+      duration: 0.6,
+    },
+  },
+};
+
+const hoverSpring = {
+  type: "spring",
+  stiffness: 300,
+  damping: 10,
+};
+
 const Skills = () => {
   return (
-    <section className="py-20 px-4" id="skills">
+    <motion.section
+      className="py-20 px-4"
+      id="skills"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.3 }}
+      variants={sectionVariants}
+    >
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold mb-4">Skills & Expertise</h2>
@@ -35,13 +75,28 @@ const Skills = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          variants={{
+            hidden: {},
+            visible: {
+              transition: { staggerChildren: 0.1 },
+            },
+          }}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+        >
           {skillCategories.map((category, index) => {
             const Icon = category.icon;
             return (
-              <Card 
-                key={index} 
-                className="p-6 hover:shadow-lg transition-all duration-300 border-2 hover:border-primary/50"
+              <motion.div
+                key={index}
+                as={Card} // Use as prop to render Card with motion
+                className="p-6 border-2 hover:border-primary/50" // Removed existing hover classes for scale
+                variants={itemVariants}
+                whileHover={{ scale: 1.03 }} // Card specific hover scale
+                transition={hoverSpring}
               >
                 <div className="flex items-start gap-4">
                   <div className="p-3 bg-gradient-to-br from-primary to-secondary rounded-lg">
@@ -51,7 +106,7 @@ const Skills = () => {
                     <h3 className="font-semibold text-xl mb-3">{category.title}</h3>
                     <div className="flex flex-wrap gap-2">
                       {category.skills.map((skill, skillIndex) => (
-                        <span 
+                        <span
                           key={skillIndex}
                           className="px-3 py-1 bg-muted rounded-full text-sm"
                         >
@@ -61,12 +116,12 @@ const Skills = () => {
                     </div>
                   </div>
                 </div>
-              </Card>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

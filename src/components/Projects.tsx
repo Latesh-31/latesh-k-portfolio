@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Eye, Brain, Code } from "lucide-react";
+import { motion } from "framer-motion";
 
 const projects = [
   {
@@ -57,9 +58,48 @@ const projects = [
   },
 ];
 
+const sectionVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: "easeOut",
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring",
+      stiffness: 300,
+      damping: 24,
+      duration: 0.6,
+    },
+  },
+};
+
+const hoverSpring = {
+  type: "spring",
+  stiffness: 300,
+  damping: 10,
+};
+
 const Projects = () => {
   return (
-    <section className="py-20 px-4" id="projects">
+    <motion.section
+      className="py-20 px-4"
+      id="projects"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.3 }}
+      variants={sectionVariants}
+    >
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold mb-4">Featured Projects</h2>
@@ -68,19 +108,38 @@ const Projects = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          variants={{
+            hidden: {},
+            visible: {
+              transition: { staggerChildren: 0.1 },
+            },
+          }}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+        >
           {projects.map((project, index) => {
             const Icon = project.icon;
             return (
-              <Card 
+              <motion.div
                 key={index}
-                className="p-6 hover:shadow-xl transition-all duration-300 group"
+                as={Card} // Use as prop to render Card with motion
+                className="p-6 group" // Removed existing hover classes
+                variants={itemVariants}
+                whileHover={{ scale: 1.03 }} // Card specific hover scale
+                transition={hoverSpring}
               >
                 <div className="space-y-4">
                   <div className="flex items-start justify-between">
-                    <div className="p-3 bg-gradient-to-br from-primary to-secondary rounded-lg group-hover:scale-110 transition-transform">
+                    <motion.div // Applied motion to icon container
+                      className="p-3 bg-gradient-to-br from-primary to-secondary rounded-lg"
+                      whileHover={{ scale: 1.1 }} // Bouncy scale for the icon itself
+                      transition={hoverSpring}
+                    >
                       <Icon className="w-6 h-6 text-primary-foreground" />
-                    </div>
+                    </motion.div>
                     <span className="text-sm text-muted-foreground">{project.period}</span>
                   </div>
 
@@ -106,12 +165,12 @@ const Projects = () => {
                     ))}
                   </div>
                 </div>
-              </Card>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

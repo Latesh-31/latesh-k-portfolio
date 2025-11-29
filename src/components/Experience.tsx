@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Briefcase, GraduationCap } from "lucide-react";
+import { motion } from "framer-motion";
 
 const experiences = [
   {
@@ -46,9 +47,48 @@ const experiences = [
   },
 ];
 
+const sectionVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: "easeOut",
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring",
+      stiffness: 300,
+      damping: 24,
+      duration: 0.6,
+    },
+  },
+};
+
+const hoverSpring = {
+  type: "spring",
+  stiffness: 300,
+  damping: 10,
+};
+
 const Experience = () => {
   return (
-    <section className="py-20 px-4 bg-muted/30" id="experience">
+    <motion.section
+      className="py-20 px-4 bg-muted/30"
+      id="experience"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.3 }}
+      variants={sectionVariants}
+    >
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold mb-4">Experience & Learning</h2>
@@ -57,13 +97,28 @@ const Experience = () => {
           </p>
         </div>
 
-        <div className="space-y-8">
+        <motion.div
+          className="space-y-8"
+          variants={{
+            hidden: {},
+            visible: {
+              transition: { staggerChildren: 0.1 },
+            },
+          }}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+        >
           {experiences.map((exp, index) => {
             const Icon = exp.icon;
             return (
-              <Card 
+              <motion.div
                 key={index}
-                className="p-6 hover:shadow-lg transition-all duration-300 border-l-4 border-l-primary"
+                as={Card} // Use as prop to render Card with motion
+                className="p-6 border-l-4 border-l-primary" // Removed existing hover classes
+                variants={itemVariants}
+                whileHover={{ scale: 1.03 }} // Card specific hover scale
+                transition={hoverSpring}
               >
                 <div className="flex flex-col md:flex-row gap-6">
                   <div className="flex-shrink-0">
@@ -97,12 +152,12 @@ const Experience = () => {
                     </ul>
                   </div>
                 </div>
-              </Card>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 
